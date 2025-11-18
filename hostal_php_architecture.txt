@@ -1,0 +1,83 @@
+hostal/
+│
+├── index.php                           # PÁGINA DE INICIO (landing page pública)
+├── config.php                          # Conexión BD + configuración general
+├── login.php                           # Login para todos los usuarios
+├── logout.php                          # Cerrar sesión
+├── registro.php                        # Registro de nuevos clientes
+├── nosotros.php                        # Página "Sobre nosotros"
+├── contacto.php                        # Página de contacto
+│
+├── includes/
+│   ├── header.php                      # Header con navbar
+│   ├── footer.php                      # Footer
+│   └── funciones.php                   # Funciones útiles (validar login, formatear, etc)
+│
+├── cliente/
+│   ├── index.php                       # Dashboard del cliente
+│   ├── mis-reservas.php                # Ver mis reservas
+│   ├── nueva-reserva.php               # Hacer nueva reserva web
+│   ├── mis-alquileres.php              # Ver historial de alquileres
+│   ├── solicitar-servicio.php          # Pedir servicio a la habitación (solo suite)
+│   └── mis-pagos.php                   # Historial de pagos
+│
+├── recepcionista/
+│   ├── index.php                       # Dashboard (ocupación, check-ins/outs del día)
+│   ├── habitaciones.php                # Ver todas las habitaciones y su estado
+│   ├── reservas.php                    # Lista de todas las reservas
+│   ├── nueva-reserva.php               # Crear reserva presencial
+│   ├── confirmar-reserva.php           # Confirmar y registrar pago de reserva
+│   ├── check-in.php                    # Hacer check-in (de reserva o directo)
+│   ├── check-out.php                   # Hacer check-out
+│   ├── clientes.php                    # Lista de clientes
+│   ├── nuevo-cliente.php               # Registrar nuevo cliente
+│   ├── registrar-pago.php              # Registrar pagos
+│   ├── venta-recepcion.php             # Vender artículos de aseo en recepción
+│   ├── servicios-habitacion.php        # Ver y procesar servicios solicitados (suites)
+│   └── reportes.php                    # Reportes básicos (ocupación, ingresos)
+│
+├── admin/
+│   ├── index.php                       # Dashboard admin
+│   ├── usuarios.php                    # CRUD usuarios del sistema
+│   ├── productos.php                   # CRUD productos/servicios
+│   ├── tipos-habitacion.php            # CRUD tipos de habitación
+│   ├── metodos-pago.php                # Gestionar métodos de pago
+│   └── reportes-avanzados.php          # Reportes financieros completos
+│
+└── assets/
+    ├── css/
+    │   └── style.css                   # Estilos personalizados
+    ├── js/
+    │   └── main.js                     # Scripts básicos
+    └── img/
+        ├── logo.png                    # Logo del hostal
+        ├── banner.jpg                  # Banner principal
+        └── habitaciones/               # Fotos de habitaciones
+
+
+FLUJO DE LA APLICACIÓN:
+=======================
+
+1. USUARIO ENTRA A: http://localhost/hostal/
+   → Se abre index.php (página pública)
+   → Ve información del hostal, habitaciones, puede ir a login o registrarse
+
+2. USUARIO VA A: login.php
+   → Ingresa usuario/contraseña
+   → Sistema valida y redirecciona según rol:
+      * Cliente → cliente/index.php
+      * Recepcionista → recepcionista/index.php
+      * Admin → admin/index.php
+
+3. TODAS LAS PÁGINAS DE cliente/, recepcionista/, admin/
+   → Validan que haya sesión activa
+   → Validan que tenga el rol correcto
+   → Si no, redirigen a login.php
+
+
+NOTAS:
+======
+- index.php es PÚBLICO (no requiere login)
+- login.php es PÚBLICO (no requiere login)
+- registro.php es PÚBLICO (para que clientes se registren)
+- TODO lo demás requiere login y validación de rol
