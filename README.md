@@ -7,3 +7,4 @@
 # hotel
 # hotel
 # hostal_dd
+# hostal_dd
