@@ -10,3 +10,4 @@
 # hostal_dd
 # hostal_dd
 # hostal_dd
+# hotel_ing
