@@ -1,172 +1,283 @@
 /* ============================================
-   ESTILOS GENERALES
+   ADMIN DASHBOARD - ESTILOS MODERNOS
    ============================================ */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --secondary: #8b5cf6;
+    --accent: #ec4899;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --dark: #0f172a;
+    --light: #f8fafc;
+    --gray: #64748b;
+    --border: #e2e8f0;
+}
+
+/* RESET GLOBAL */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-html, body {
-    height: 100%;
-    width: 100%;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f4f4f9 0%, #e8eaf6 100%);
-    overflow-x: hidden;
-}
-
+/* Layout container for admin pages */
 .admin-container {
     display: flex;
-    min-height: 100vh;
-    width: 100%;
+    gap: 2rem;
+    align-items: flex-start;
+    padding: 2rem;
 }
+
+.sidebar {
+    width: 240px;
+    padding: 1.5rem;
+}
+
+.main-content {
+    flex: 1 1 auto;
+    padding: 0.5rem 0;
+}
+
+/* Two-column helper for forms + results (left form, right results) */
+.two-col { display: flex; gap: 1.25rem; align-items: flex-start; }
+.two-col .left-col { flex: 0 0 360px; }
+.two-col .right-col { flex: 1 1 auto; }
+
+.table-container { max-height: 62vh; overflow-y: auto; }
 
 /* ============================================
-   SIDEBAR (MENÚ LATERAL IZQUIERDO)
+   SIDEBAR
    ============================================ */
-.sidebar {
-    width: 280px;
-    background: linear-gradient(180deg, #070707 0%, #1a1a1a 100%);
-    padding: 30px 20px;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    overflow-y: auto;
-    transition: all 0.3s ease;
-    z-index: 1000;
-}
-
-.sidebar h3 {
-    color: #fff;
-    font-size: 1.2rem;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #0066cc;
-    text-align: center;
-}
-
 .sidebar a {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px 18px;
-    margin-bottom: 8px;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 0.8rem;
+    border-radius: 15px;
     text-decoration: none;
-    color: #fff;
+    color: var(--dark);
     font-weight: 500;
-    border-radius: 8px;
+    font-size: 1.05rem;
     transition: all 0.3s ease;
-    background-color: rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
 }
 
-.sidebar a:hover,
+.sidebar a::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 0;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    transition: all 0.3s ease;
+}
+
+.sidebar a:hover {
+    background: rgba(99, 102, 241, 0.1);
+    transform: translateX(5px);
+}
+
+.sidebar a:hover::before {
+    height: 100%;
+}
+
 .sidebar a.active {
-    background-color: #0066cc;
-    transform: translateX(8px);
-    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.sidebar a.active::before {
+    display: none;
 }
 
 .sidebar a span {
-    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+}
+
+.sidebar a span svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
+
+.sidebar a.active span svg {
+    fill: white;
+}
+
+/* Enlaces grandes */
+.sidebar a.big {
+    font-size: 1.02rem;
+    padding: 0.9rem 1rem;
+    font-weight: 600;
+}
+
+.sidebar a.big span {
+    width: 32px;
+    height: 32px;
+}
+
+.sidebar a.big span svg {
+    width: 20px;
+    height: 20px;
 }
 
 /* ============================================
-   CONTENIDO PRINCIPAL
+   MAIN CONTENT
    ============================================ */
 .main-content {
     flex: 1;
-    margin-left: 280px;
-    padding: 40px;
-    overflow-y: auto;
-    min-height: 100vh;
-    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out;
 }
 
-/* ============================================
-   CABECERA DE PÁGINA
-   ============================================ */
+@keyframes fadeInUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Page Header */
 .page-header {
-    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .page-header h2 {
-    color: #004080;
-    font-size: 2rem;
-    margin-bottom: 10px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
 }
 
 .page-header p {
-    color: #666;
-    font-size: 1rem;
+    color: var(--gray);
+    font-size: 1.1rem;
 }
 
 /* ============================================
-   TARJETAS DE ESTADÍSTICAS (DASHBOARD)
+   STATS GRID
    ============================================ */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 24px;
-    margin-bottom: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .stat-card {
-    background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
-    padding: 28px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border-left: 4px solid #0066cc;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
 }
 
 .stat-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 102, 204, 0.15);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+    border-color: var(--primary);
 }
 
 .stat-card .icon {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.stat-card .icon svg {
+    width: 32px;
+    height: 32px;
+    fill: var(--primary);
 }
 
 .stat-card .label {
-    color: #004080;
+    color: var(--gray);
     font-size: 0.95rem;
-    margin-bottom: 8px;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
 }
 
 .stat-card .value {
-    color: #0066cc;
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /* ============================================
-   CONTENEDOR DE CONTENIDO
+   CONTENT BOX
    ============================================ */
 .content-box {
-    background: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.content-box h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.content-box h3 svg {
+    width: 28px;
+    height: 28px;
+    fill: var(--primary);
 }
 
 /* ============================================
-   FORMULARIOS
+   FORMS
    ============================================ */
-.form-section {
-    margin-bottom: 30px;
-}
-
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin-bottom: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .form-group {
@@ -175,104 +286,149 @@ html, body {
 }
 
 .form-group label {
-    color: #004080;
+    color: var(--dark);
     font-weight: 600;
-    margin-bottom: 6px;
-    font-size: 0.9rem;
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
 }
 
 .form-group input,
-.form-group select,
-.form-group textarea {
-    padding: 10px 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    transition: border-color 0.3s;
+.form-group select {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+    font-family: 'Poppins', sans-serif;
 }
 
 .form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
+.form-group select:focus {
     outline: none;
-    border-color: #0066cc;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
 
-.btn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
+.form-group select {
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.95rem;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 3rem;
 }
 
-.btn-primary {
-    background: linear-gradient(135deg, #0066cc 0%, #004080 100%);
-    color: #fff;
-}
+    /* ============================================
+    BUTTONS
+    ============================================ */
+    .btn {
+        padding: 0.5rem 0.9rem;
+        border: none;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.18s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        text-decoration: none;
+        line-height: 1;
+    }
 
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
-}
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
 
-.btn-danger {
-    background-color: #dc3545;
-    color: #fff;
-    padding: 8px 12px;
-    font-size: 0.85rem;
-}
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
 
-.btn-danger:hover {
-    background-color: #c82333;
-}
+    .btn-danger {
+        background: linear-gradient(135deg, var(--error), #dc2626);
+        color: white;
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+    }
+
+    .btn-danger svg {
+        width: 20px;
+        height: 20px;
+        fill: white;
+    }
+
+    /* Small button helper for tight UIs */
+    .btn-sm, .btn-small {
+        padding: 0.36rem 0.6rem !important;
+        font-size: 0.82rem !important;
+        border-radius: 8px !important;
+    }
+
+    .btn svg { width: 16px; height:16px; }
 
 /* ============================================
-   TABLAS
+   TABLES
    ============================================ */
 .table-container {
     overflow-x: auto;
-    margin-top: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
 }
 
 thead {
-    background: linear-gradient(135deg, #0066cc 0%, #004080 100%);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
 }
 
 thead th {
-    color: #fff;
-    padding: 15px;
+    padding: 1.2rem 1rem;
     text-align: left;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 tbody tr {
-    border-bottom: 1px solid #e0e0e0;
-    transition: background-color 0.2s ease;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.2s ease;
 }
 
 tbody tr:hover {
-    background-color: #f0f4ff;
+    background: rgba(99, 102, 241, 0.05);
+}
+
+tbody tr:last-child {
+    border-bottom: none;
 }
 
 tbody td {
-    padding: 14px 15px;
-    color: #333;
-    font-size: 0.9rem;
+    padding: 1rem;
+    color: var(--gray);
 }
 
 /* ============================================
-   LISTA DE RESUMEN (REPORTES)
+   SUMMARY LIST
    ============================================ */
 .summary-list {
     list-style: none;
@@ -280,54 +436,258 @@ tbody td {
 }
 
 .summary-list li {
-    background: #f0f4ff;
-    padding: 18px 24px;
-    margin-bottom: 12px;
-    border-radius: 8px;
-    border-left: 4px solid #0066cc;
-    font-size: 1.1rem;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    border-left: 4px solid var(--primary);
+}
+
+.summary-list li:hover {
+    background: rgba(99, 102, 241, 0.1);
+    transform: translateX(5px);
+}
+
+.summary-list li svg {
+    width: 28px;
+    height: 28px;
+    fill: var(--primary);
+    flex-shrink: 0;
 }
 
 .summary-list li strong {
-    color: #0066cc;
-    font-size: 1.3rem;
+    color: var(--primary);
+    font-weight: 700;
 }
 
 /* ============================================
    RESPONSIVE
    ============================================ */
-@media (max-width: 992px) {
+@media (max-width: 1200px) {
+    .admin-container {
+        flex-direction: column;
+    }
+    
     .sidebar {
-        width: 220px;
+        width: 100%;
+        position: relative;
+        top: 0;
+    }
+    
+    .sidebar a {
+        justify-content: flex-start;
+    }
+}
+
+/* Improve sidebar and layout for tablet / mobile */
+@media (max-width: 1024px) {
+    .sidebar {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 0.6rem;
+        padding: 0.6rem 0.8rem;
+        align-items: center;
+    }
+    .sidebar h3 { display: none; }
+    .sidebar a { flex: 0 0 auto; white-space: nowrap; padding: 0.6rem 0.9rem; border-radius: 10px; }
+    .main-content { padding-top: 1rem; }
+}
+
+/* Sidebar toggle button + off-canvas behaviour */
+#sidebar-toggle { display: none; }
+
+@media (max-width: 1024px) {
+    #sidebar-toggle {
+        display: inline-flex;
+        position: fixed;
+        left: 12px;
+        top: 12px;
+        z-index: 1205;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255,255,255,0.95);
+        border-radius: 10px;
+        padding: 0.4rem 0.6rem;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        border: 1px solid rgba(0,0,0,0.06);
+        font-size: 1.05rem;
     }
 
-    .main-content {
-        margin-left: 220px;
-        padding: 30px 20px;
+    .admin-container { position: relative; }
+
+    .admin-container .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 260px;
+        transform: translateX(-110%);
+        transition: transform 0.24s ease;
+        background: rgba(255,255,255,0.98);
+        padding-top: 72px;
+        z-index: 1210;
+        box-shadow: 6px 0 24px rgba(0,0,0,0.08);
+    }
+
+    .admin-container.sidebar-open .sidebar {
+        transform: translateX(0);
+    }
+
+    /* dark overlay when sidebar open */
+    .admin-container.sidebar-open::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.36);
+        z-index: 1200;
     }
 }
 
 @media (max-width: 768px) {
-    .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        padding: 20px;
+    /* Stack the two columns vertically */
+    .two-col { flex-direction: column; gap: 1rem; }
+    .two-col .left-col { flex: 1 1 auto; width: 100%; }
+    .two-col .right-col { width: 100%; }
+
+    /* Let tables expand vertically on small screens */
+    .table-container { max-height: none; overflow: auto; }
+
+    /* Make action buttons compact and full-width inside forms */
+    .btn, .btn-primary, .btn-danger { width: auto; }
+    .content-box form > .form-grid, .content-box form > div { gap: 0.8rem; }
+}
+
+@media (max-width: 480px) {
+    .sidebar a { padding: 0.5rem 0.6rem; font-size: 0.85rem; }
+    .admin-container { padding: 1rem; }
+    .page-header { padding: 1.2rem; }
+    .content-box { padding: 1rem; }
+    .form-group input, .form-group select, .form-group textarea { padding: 0.8rem; }
+    /* Make small action buttons more finger-friendly */
+    .btn-sm, .btn-small { padding: 0.6rem 0.9rem !important; font-size: 0.9rem !important; }
+    /* Ensure tables remain readable */
+    thead th, tbody td { padding: 0.6rem 0.5rem; }
+}
+
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 0 1rem;
+        margin: 1rem auto;
     }
     
-    .main-content {
-        margin-left: 0;
-        padding: 20px;
+    .sidebar {
+        padding: 1.5rem;
     }
-
+    
+    .page-header {
+        padding: 2rem 1.5rem;
+    }
+    
+    .page-header h2 {
+        font-size: 2rem;
+    }
+    
+    .content-box {
+        padding: 2rem 1.5rem;
+    }
+    
     .stats-grid {
         grid-template-columns: 1fr;
     }
-
+    
     .form-grid {
         grid-template-columns: 1fr;
     }
+    
+    .table-container {
+        font-size: 0.85rem;
+    }
+    
+    thead th,
+    tbody td {
+        padding: 0.8rem 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-header h2 {
+        font-size: 1.8rem;
+    }
+    
+    .stat-card {
+        padding: 1.5rem;
+    }
+    
+    .stat-card .value {
+        font-size: 1.8rem;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.stat-card:hover .icon {
+    animation: pulse 1s ease-in-out;
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--light);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+}
+
+/* ============================================
+   SVG GRADIENT (para iconos)
+   ============================================ */
+svg defs {
+    display: none;
+}
+
+.sidebar h3 svg,
+.stat-card .icon svg {
+    filter: drop-shadow(0 2px 4px rgba(99, 102, 241, 0.2));
+}
+
+/* ============================================
+   FONDO DE PANTALLA
+   ============================================ */
+body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    background: url('../assets/img/fondo.png') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 }

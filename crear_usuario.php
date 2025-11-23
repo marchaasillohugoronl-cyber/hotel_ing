@@ -1,6 +1,8 @@
 <?php
-// Incluir configuración
+// Incluir configuración y comprobar sesión/rol
 require_once 'config.php';
+require_once 'includes/funciones.php';
+verificarRol('administrador');
 
 // Verificar que se recibieron los datos por POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

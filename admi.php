@@ -1,4 +1,9 @@
+
 <?php
+// Proteger esta utilidad: solo administradores
+require_once 'includes/funciones.php';
+verificarRol('administrador');
+
 // Contraseña del administrador
 $password_plain = "1234"; // Cambia por la contraseña que quieras
 
@@ -12,3 +17,4 @@ echo "Hash generado: $password_hash\n";
 
 //INSERT INTO usuario (username, password, nombres, apellidos, email, rol, estado)
 VALUES ('admin1', '$2y$10$LVLeB6xDzrTV3Sdua/Dgg.AZ0gBMxcHWwsoJ.zsGhPvKVV28CgxxW', 'Admin', 'General', 'admin@hostal.com', 'administrador', 'activo');
+ 

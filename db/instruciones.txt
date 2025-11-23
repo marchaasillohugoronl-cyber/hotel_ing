@@ -1,0 +1,15 @@
+Copia el archivo hostal_dulce_descanso_01.sql a la otra computadora
+(por USB, red, correo, etc.).
+
+Luego, en esa computadora, abre la terminal y ejecuta:
+
+👉 1. Crear la base de datos vacía
+
+Entra al cliente de MariaDB:
+mysql -u root -p
+
+CREATE DATABASE hostal_dulce_descanso_01;
+EXIT;
+
+mysql -u root -p hostal_dulce_descanso_01 < hostal_dulce_descanso_01.sql
+

@@ -1,144 +1,145 @@
 <?php
-include '../config.php';
-include '../includes/funciones.php';
+require_once '../config.php';
+require_once '../includes/funciones.php';
 
 verificarLogin();
 verificarRol('cliente');
 include '../includes/header.php';
 
-$id_cliente = $_SESSION['usuario']['id_cliente'];
-$sql = "SELECT * FROM v_reservas WHERE id_cliente = ? ORDER BY fecha_reserva DESC";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id_cliente);
+$id_cliente = $_SESSION['usuario']['id_cliente'] ?? null;
+
+if (!$id_cliente) {
+    echo '<p>No se encontró información del cliente.</p>';
+    include '../includes/footer.php';
+    exit;
+}
+
+// Cancelar reserva
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancelar']) && isset($_POST['id_reserva'])) {
+    $idr = intval($_POST['id_reserva']);
+    $stmt = $conn->prepare("UPDATE reserva SET estado='cancelada' WHERE id_reserva=? AND id_cliente=?");
+    $stmt->bind_param('ii', $idr, $id_cliente);
+    $stmt->execute();
+}
+
+$stmt = $conn->prepare("SELECT id_reserva, codigo, fecha_reserva, fecha_entrada, fecha_salida, num_noches, total, estado FROM reserva WHERE id_cliente=? ORDER BY fecha_reserva DESC");
+$stmt->bind_param('i', $id_cliente);
 $stmt->execute();
 $res = $stmt->get_result();
+
 ?>
+<!-- CSS agregado -->
 <style>
-    /* Mis reservas */
-.mis-reservas {
-    max-width: 1000px;
-    margin: 40px auto;
-    padding: 0 20px;
-}
-
-.mis-reservas h2 {
-    text-align: center;
-    color: #004080;
-    margin-bottom: 30px;
-}
-
-/* Grid de reservas */
-.reservas-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-}
-
-/* Tarjetas individuales */
-.reserva-card {
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.reserva-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-
-.reserva-card p {
-    margin: 10px 0;
-    font-size: 1rem;
-}
-
-/* Estado de la reserva */
-.estado {
-    font-weight: bold;
-    padding: 3px 8px;
-    border-radius: 5px;
-    color: #fff;
-}
-
-.estado.confirmada { background-color: #28a745; }
-.estado.cancelada { background-color: #dc3545; }
-.estado.pendiente { background-color: #ffc107; color: #000; }
-
-/* Mensaje cuando no hay reservas */
-.no-reservas {
-    text-align: center;
-    font-size: 1.1rem;
-    color: #555;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .reserva-card {
-        padding: 15px;
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
     }
-}
-
-/* Estilos modernos */
+    main.container {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+        text-align: center;
+        color: #333;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table th, table td {
+        padding: 12px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+    table th {
+        background-color: #007BFF;
+        color: white;
+    }
+    table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    table tr:hover {
+        background-color: #f1f1f1;
+    }
+    button {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #c82333;
+    }
+    a {
+        text-decoration: none;
+        color: #007BFF;
+    }
+    a:hover {
+        text-decoration: underline;
+    }
+    p {
+        text-align: center;
+    }
+    /* ============================================
+   FONDO DE PANTALLA
+   ============================================ */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: url('../assets/img/fondo_hgeneral.png') no-repeat center center fixed;
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    background: url('../assets/img/fondo.png') no-repeat center center fixed;
     background-size: cover;
     margin: 0;
     padding: 0;
-}
-.main-content {
-    max-width: 900px;
-    margin: 40px auto;
-    background: rgba(255,255,255,0.92);
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-    padding: 30px;
-}
-h2 {
-    color: #004080;
-    text-align: center;
-    margin-bottom: 20px;
-}
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-table th, table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
-}
-table th {
-    background-color: #004080;
-    color: #fff;
-}
-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-table tr:hover {
-    background-color: #e6f0ff;
+    overflow-x: hidden;
 }
 </style>
-<main class="mis-reservas">
-    <h2>Mis Reservas</h2>
 
-    <?php if ($res->num_rows > 0): ?>
-    <div class="reservas-grid">
-        <?php while ($r = $res->fetch_assoc()): ?>
-        <div class="reserva-card">
-            <p><strong>Código:</strong> <?= htmlspecialchars($r['codigo']) ?></p>
-            <p><strong>Fechas:</strong> <?= formatoFecha($r['fecha_entrada']) ?> → <?= formatoFecha($r['fecha_salida']) ?></p>
-            <p><strong>Habitaciones:</strong> <?= htmlspecialchars($r['habitaciones']) ?></p>
-            <p><strong>Total:</strong> <?= formatoMoneda($r['total']) ?></p>
-            <p><strong>Estado:</strong> <span class="estado <?= strtolower($r['estado']) ?>"><?= ucfirst($r['estado']) ?></span></p>
-        </div>
-        <?php endwhile; ?>
-    </div>
-    <?php else: ?>
-        <p class="no-reservas">No tienes reservas aún.</p>
+<main class="container">
+    <h2>Mis reservas</h2>
+    <?php if (isset($_GET['ok'])): ?>
+        <p style="color:green;">Reserva creada correctamente.</p>
     <?php endif; ?>
+    <?php if ($res->num_rows === 0): ?>
+        <p>No tiene reservas registradas.</p>
+    <?php else: ?>
+        <table>
+            <thead>
+                <tr><th>Código</th><th>Fecha reserva</th><th>Entrada</th><th>Salida</th><th>Noches</th><th>Total</th><th>Estado</th><th>Acciones</th></tr>
+            </thead>
+            <tbody>
+            <?php while ($r = $res->fetch_assoc()): ?>
+                <tr>
+                    <td><?= htmlspecialchars($r['codigo']) ?></td>
+                    <td><?= htmlspecialchars($r['fecha_reserva']) ?></td>
+                    <td><?= htmlspecialchars($r['fecha_entrada']) ?></td>
+                    <td><?= htmlspecialchars($r['fecha_salida']) ?></td>
+                    <td><?= (int)$r['num_noches'] ?></td>
+                    <td>S/ <?= number_format($r['total'],2) ?></td>
+                    <td><?= htmlspecialchars($r['estado']) ?></td>
+                    <td>
+                        <?php if ($r['estado'] !== 'cancelada' && $r['estado'] !== 'confirmada'): ?>
+                            <form method="POST" style="display:inline-block;">
+                                <input type="hidden" name="id_reserva" value="<?= $r['id_reserva'] ?>">
+                                <button type="submit" name="cancelar" onclick="return confirm('Cancelar reserva?')">Cancelar</button>
+                            </form>
+                        <?php else: ?>
+                            -
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endwhile; ?>
+            </tbody>
+        </table>
+    <?php endif; ?>
+    <p><a href="index.php">Volver al panel</a></p>
 </main>
-
 <?php include '../includes/footer.php'; ?>
